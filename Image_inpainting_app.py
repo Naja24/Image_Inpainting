@@ -45,24 +45,24 @@ def preprocess_image(image):
 #     return image
 
 
-# def upscale_image(image, size=(200, 200)):
-#     """Upscale 64x64 image to 200x200 using high-quality interpolation."""
-#     image = (image * 255).astype(np.uint8)  # Convert back to 0-255 range
-#     image = cv2.resize(image, size, interpolation=cv2.INTER_CUBIC)  # High-quality upscaling
-#     return image
-
 def upscale_image(image, size=(200, 200)):
-    image = (image * 255).astype(np.uint8)
-    image = cv2.resize(image, size, interpolation=cv2.CUBIC)
+    """Upscale 64x64 image to 200x200 using high-quality interpolation."""
+    image = (image * 255).astype(np.uint8)  # Convert back to 0-255 range
+    image = cv2.resize(image, size, interpolation=cv2.INTER_CUBIC)  # High-quality upscaling
+    return image
 
-    # Apply Bilateral Filtering (Denoising while preserving edges)
-    image = cv2.bilateralFilter(image, d=9, sigmaColor=75, sigmaSpace=75)
+# def upscale_image(image, size=(200, 200)):
+#     image = (image * 255).astype(np.uint8)
+#     image = cv2.resize(image, size, interpolation=cv2.CUBIC)
 
-    # Apply Unsharp Masking (Sharpening)
-    gaussian = cv2.GaussianBlur(image, (0, 0), 3)
-    sharpened = cv2.addWeighted(image, 1.5, gaussian, -0.5, 0)
+#     # Apply Bilateral Filtering (Denoising while preserving edges)
+#     image = cv2.bilateralFilter(image, d=9, sigmaColor=75, sigmaSpace=75)
 
-    return sharpened
+#     # Apply Unsharp Masking (Sharpening)
+#     gaussian = cv2.GaussianBlur(image, (0, 0), 3)
+#     sharpened = cv2.addWeighted(image, 1.5, gaussian, -0.5, 0)
+
+#     return sharpened
 
 
 def create_square_mask(image, x, y, patch_size=8):

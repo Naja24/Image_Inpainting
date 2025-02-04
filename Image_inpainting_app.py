@@ -29,7 +29,7 @@ model = load_inpainting_model()
 def preprocess_image(image):
     """Convert image to 64x64, normalize, and return as numpy array."""
     image = image.resize(TARGET_SIZE, Image.LANCZOS)  # High-quality resize
-    image = np.array(image).astype(np.float32) / 255.0
+    # image = np.array(image).astype(np.float32) / 255.0
     return image
 
 def upscale_image(image, size=(200, 200)):
@@ -82,15 +82,18 @@ if uploaded_file:
             # Canvas for user to draw mask
             st.subheader("✏️ Draw on the Image")
             st.markdown("Click to draw the missing area for inpainting.")
-            canvas_result = st_canvas(
+            if processed_image is not None:
+                canvas_result = st_canvas(
                 fill_color="rgba(255, 255, 255, 1)",
                 stroke_width=0,
                 stroke_color="rgba(255, 255, 255, 1)",
-                background_image=image.resize(TARGET_SIZE, Image.LANCZOS),
-                drawing_mode="point",
-                key="canvas",
-                width=64, height=64  
-            )
+                background_image=processed_image,
+                update_streamlit=True,
+                drawing_mode="freedraw",
+                key="canvas"
+                )
+else:
+    st.error("❌ Error: No image loaded.")
 
         with col2:
             if canvas_result.json_data is not None and canvas_result.json_data["objects"]:

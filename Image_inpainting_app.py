@@ -92,8 +92,8 @@ if uploaded_file:
                 drawing_mode="freedraw",
                 key="canvas"
                 )
-else:
-    st.error("❌ Error: No image loaded.")
+            else:
+                st.error("❌ Error: No image loaded.")
 
         with col2:
             if canvas_result.json_data is not None and canvas_result.json_data["objects"]:

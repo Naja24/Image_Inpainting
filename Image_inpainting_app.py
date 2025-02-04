@@ -44,6 +44,22 @@ def create_square_mask(image, x, y, patch_size=8):
     mask[y:y+patch_size, x:x+patch_size, :] = 0
     return mask
 
+st.sidebar.title("📖 How to Use")
+st.sidebar.markdown("""
+1️⃣ **Upload an Image** (JPG, PNG, JPEG)  
+2️⃣ **Draw a Mask** on the image where you want inpainting.  
+3️⃣ **Click Process** to restore the missing area.  
+4️⃣ **Compare Output** between the original and restored images.  
+""")
+st.sidebar.markdown("---")
+st.sidebar.subheader("✨ Features")
+st.sidebar.markdown("""
+✅ Supports **high-quality inpainting**  
+✅ Processes **64x64 images** and upscales to **200x200**  
+✅ Uses **deep learning** for accurate restoration  
+""")
+
+
 # Streamlit UI
 st.title("Image Inpainting Demo 🎨")
 

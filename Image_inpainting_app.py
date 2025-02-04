@@ -26,30 +26,44 @@ def load_inpainting_model():
 
 model = load_inpainting_model()
 
+def preprocess_image(image):
+    """Convert image to 64x64, normalize, and return as numpy array."""
+    image = image.resize(TARGET_SIZE, Image.LANCZOS)  # High-quality resize
+    image = np.array(image).astype(np.float32) / 255.0
+    return image
+
 # def preprocess_image(image):
-#     """Convert image to 64x64, normalize, and return as numpy array."""
-#     image = image.resize(TARGET_SIZE, Image.LANCZOS)  # High-quality resize
+#     image = image.resize(TARGET_SIZE, Image.LANCZOS)
 #     image = np.array(image).astype(np.float32) / 255.0
+
+#     # Apply CLAHE (Contrast Limited Adaptive Histogram Equalization)
+#     lab = cv2.cvtColor((image * 255).astype(np.uint8), cv2.COLOR_RGB2LAB)
+#     clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
+#     lab[:, :, 0] = clahe.apply(lab[:, :, 0])
+#     image = cv2.cvtColor(lab, cv2.COLOR_LAB2RGB) / 255.0
+
 #     return image
 
-def preprocess_image(image):
-    image = image.resize(TARGET_SIZE, Image.LANCZOS)
-    image = np.array(image).astype(np.float32) / 255.0
 
-    # Apply CLAHE (Contrast Limited Adaptive Histogram Equalization)
-    lab = cv2.cvtColor((image * 255).astype(np.uint8), cv2.COLOR_RGB2LAB)
-    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
-    lab[:, :, 0] = clahe.apply(lab[:, :, 0])
-    image = cv2.cvtColor(lab, cv2.COLOR_LAB2RGB) / 255.0
-
-    return image
-
+# def upscale_image(image, size=(200, 200)):
+#     """Upscale 64x64 image to 200x200 using high-quality interpolation."""
+#     image = (image * 255).astype(np.uint8)  # Convert back to 0-255 range
+#     image = cv2.resize(image, size, interpolation=cv2.INTER_CUBIC)  # High-quality upscaling
+#     return image
 
 def upscale_image(image, size=(200, 200)):
-    """Upscale 64x64 image to 200x200 using high-quality interpolation."""
-    image = (image * 255).astype(np.uint8)  # Convert back to 0-255 range
-    image = cv2.resize(image, size, interpolation=cv2.INTER_CUBIC)  # High-quality upscaling
-    return image
+    image = (image * 255).astype(np.uint8)
+    image = cv2.resize(image, size, interpolation=cv2.CUBIC)
+
+    # Apply Bilateral Filtering (Denoising while preserving edges)
+    image = cv2.bilateralFilter(image, d=9, sigmaColor=75, sigmaSpace=75)
+
+    # Apply Unsharp Masking (Sharpening)
+    gaussian = cv2.GaussianBlur(image, (0, 0), 3)
+    sharpened = cv2.addWeighted(image, 1.5, gaussian, -0.5, 0)
+
+    return sharpened
+
 
 def create_square_mask(image, x, y, patch_size=8):
     """Create a square mask at given (x,y) position."""

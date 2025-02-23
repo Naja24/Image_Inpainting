@@ -12,7 +12,7 @@ TARGET_SIZE = (64, 64)  # Model's expected input size
 # Load the trained model
 @st.cache_resource
 def load_inpainting_model():
-    model_path = "https://github.com/Naja24/Image_Inpainting/blob/main/autoencoder_using_pretrained%20(1).h5"
+    model_path = "autoencoder_using_pretrained%20(1).h5"
     if not os.path.exists(model_path):
         st.error(f"Model file not found at {model_path}. Please ensure the model file exists.")
         return None

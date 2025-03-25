@@ -12,7 +12,7 @@ TARGET_SIZE = (64, 64)  # Model's expected input size
 # Load the trained model
 @st.cache_resource
 def load_inpainting_model():
-    model_path = "New_Model1.h5"
+    model_path = "generator_inpainting_gan.h5"
     if not os.path.exists(model_path):
         st.error(f"Model file not found at {model_path}. Please ensure the model file exists.")
         return None
